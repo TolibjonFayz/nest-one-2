@@ -5,19 +5,18 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
-  BelongsToMany,
 } from 'sequelize-typescript';
 import { Company } from 'src/company/models/company.model';
-import { Driver } from 'src/driver/models/driver.model';
-import { MachineDriver } from 'src/machine_driver/models/machine-driver.model';
 
-interface machineAtr {
-  name: string;
+interface builderAtr {
+  full_name: string;
+  birth_day: Date;
+  salary: number;
   companyId: number;
 }
 
-@Table({ tableName: 'machine' })
-export class Machine extends Model<Machine, machineAtr> {
+@Table({ tableName: 'builder' })
+export class Builder extends Model<Builder, builderAtr> {
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -30,7 +29,19 @@ export class Machine extends Model<Machine, machineAtr> {
     allowNull: false,
     unique: true,
   })
-  name: string;
+  full_name: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  salary: number;
+
+  // @Column({
+  //   type: DataType.INTEGER,
+  //   allowNull: false,
+  // })
+  // companyId: number;
 
   @ForeignKey(() => Company)
   @Column({
@@ -41,7 +52,4 @@ export class Machine extends Model<Machine, machineAtr> {
 
   @BelongsTo(() => Company)
   company: Company;
-
-  @BelongsToMany(() => Driver, () => MachineDriver)
-  machines: Driver[];
 }

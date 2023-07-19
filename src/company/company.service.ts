@@ -14,7 +14,9 @@ export class CompanyService {
   }
 
   async getAllCompany(): Promise<Company[]> {
-    const companies = await this.companyRepo.findAll();
+    const companies = await this.companyRepo.findAll({
+      include: { all: true },
+    });
     return companies;
   }
 

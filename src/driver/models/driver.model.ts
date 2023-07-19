@@ -1,4 +1,12 @@
-import { Table, Model, Column, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Model,
+  Column,
+  DataType,
+  BelongsToMany,
+} from 'sequelize-typescript';
+import { Machine } from 'src/machine/models/machine.model';
+import { MachineDriver } from 'src/machine_driver/models/machine-driver.model';
 
 interface driverAtr {
   first_name: string;
@@ -17,14 +25,15 @@ export class Driver extends Model<Driver, driverAtr> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique: true,
   })
   first_name: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique: true,
   })
   last_name: string;
+
+  @BelongsToMany(() => Machine, () => MachineDriver)
+  machines: Machine[];
 }
