@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { CompanyModule } from './company/company.module';
-import { Company } from './company/models/company.model';
-import { MachineModule } from './machine/machine.module';
-import { Machine } from './machine/models/machine.model';
-import { DriverModule } from './driver/driver.module';
-import { BuilderModule } from './builder/builder.module';
-import { Driver } from './driver/models/driver.model';
-import { Builder } from './builder/models/builder.modules';
-import { MachineDriverModule } from './machine_driver/machine_driver.module';
-import { MachineDriver } from './machine_driver/models/machine-driver.model';
+import { RolesModule } from './roles/roles.module';
+import { Role } from './roles/models/roles.model';
+import { UsersModule } from './users/users.module';
+import { User } from './users/models/users.model';
+import { UserRoles } from './roles/models/user-roles.model';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,15 +18,13 @@ import { MachineDriver } from './machine_driver/models/machine-driver.model';
       username: process.env.POSTGRES_USER,
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
-      models: [Company, Machine, Driver, Builder, MachineDriver],
+      models: [Role, User, UserRoles],
       autoLoadModels: true,
       logging: true,
     }),
-    CompanyModule,
-    MachineModule,
-    DriverModule,
-    BuilderModule,
-    MachineDriverModule,
+    RolesModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
