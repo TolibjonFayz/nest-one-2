@@ -7,9 +7,9 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Post } from 'src/posts/models/posts.model';
-import { Role } from 'src/roles/models/roles.model';
-import { UserRoles } from 'src/roles/models/user-roles.model';
+import { Role } from '../../roles/models/roles.model';
+import { UserRoles } from '../../roles/models/user-roles.model';
+import { Post } from '../../posts/models/posts.model';
 
 interface UserCreationAttrs {
   name: string;

@@ -5,8 +5,8 @@ import {
   DataType,
   BelongsToMany,
 } from 'sequelize-typescript';
-import { User } from 'src/users/models/users.model';
 import { UserRoles } from './user-roles.model';
+import { User } from '../../users/models/users.model';
 
 interface RoleCreateAttrs {
   value: string;
