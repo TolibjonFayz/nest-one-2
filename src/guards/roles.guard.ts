@@ -1,14 +1,14 @@
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
-  UnauthorizedException,
   ForbiddenException,
+  Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
-import { ROLES_KEY } from '../decorators/roles-auth.decorator';
+import { ROLES_KEY } from '../decorator/roles-auth.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -23,25 +23,24 @@ export class RolesGuard implements CanActivate {
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
-
     if (!requiredRoles) {
       return true;
     }
 
     const req = context.switchToHttp().getRequest();
+
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new UnauthorizedException({
-        message: "Foydalanuvchi avtorizatsiyadan o'tmagan1",
+        message: 'Invalid authorization header (1)',
       });
     }
 
-    const bearer = authHeader.split(' ')[0];
-    const token = authHeader.split(' ')[1];
+    const [bearer, token] = authHeader.split(' ');
 
     if (bearer !== 'Bearer' || !token) {
       throw new UnauthorizedException({
-        message: "Foydalanuvchi avtorixatsiyadan o'tmagan2",
+        message: 'Invalid authorization header (2)',
       });
     }
 
@@ -51,7 +50,7 @@ export class RolesGuard implements CanActivate {
       console.log(user);
     } catch (error) {
       throw new UnauthorizedException({
-        message: "Foydalanuvchi avtorizatsiyadan o'tmagan3",
+        message: 'Invalid authorization header (3)',
       });
     }
     req.user = user;
@@ -59,12 +58,12 @@ export class RolesGuard implements CanActivate {
     const permission = user.roles.some((role: any) =>
       requiredRoles.includes(role.value),
     );
+
     if (!permission) {
       throw new ForbiddenException({
-        message: 'Sizga ruxsat etilmagan',
+        message: 'You do not have permission ',
       });
     }
-
     return true;
   }
 }

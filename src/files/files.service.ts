@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as path from 'path';
 import * as uuid from 'uuid';
 import * as fs from 'fs';
@@ -12,12 +12,11 @@ export class FilesService {
       if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath, { recursive: true });
       }
-
       fs.writeFileSync(path.join(filePath, fileName), file.buffer);
       return fileName;
     } catch (error) {
       throw new HttpException(
-        'Fayl yozishda xatolik',
+        'Faylni yozishda xatolik',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

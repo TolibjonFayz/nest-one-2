@@ -1,15 +1,16 @@
+import { ActivateUserDto } from './dto/activate-user.dto';
 import {
-  Injectable,
   BadRequestException,
   HttpException,
   HttpStatus,
+  Injectable,
 } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './models/users.model';
-import { createUserDto } from './dto/createUser.dto';
-import { AddRoleDto } from './dto/add-role.dto';
-import { ActivateUserDto } from './dto/activate-user.dto';
+import { User } from './model/user.model';
 import { RolesService } from '../roles/roles.service';
+import { AddRoleDto } from './dto/add-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,13 +19,13 @@ export class UsersService {
     private readonly roleService: RolesService,
   ) {}
 
-  async createUser(createUserDto: createUserDto) {
+  async createUser(createUserDto: CreateUserDto) {
     const newUser = await this.userRepository.create(createUserDto);
-    const role = await this.roleService.getRoleByValue('USER');
+    const role = await this.roleService.getRoleByValue('ADMIN');
+    // const role=await this.roleService.getRoleByValue('USER')
     if (!role) {
       throw new BadRequestException('Role not found');
     }
-
     await newUser.$set('roles', [role.id]);
     await newUser.save();
     newUser.roles = [role];
@@ -56,26 +57,27 @@ export class UsersService {
   async deleteUser(id: number) {
     const user = await this.userRepository.destroy({ where: { id } });
     if (!user) {
-      throw new HttpException('Foydalanuvhchi topilmadi', HttpStatus.NOT_FOUND);
+      throw new HttpException('Foydalanuvchi topilmadi', HttpStatus.NOT_FOUND);
     }
     return { message: "Foydalanuvchi o'chirildi" };
   }
 
-  async addRole(addRoleDto: AddRoleDto) {
+  async AddRole(addRoleDto: AddRoleDto) {
     const user = await this.userRepository.findByPk(addRoleDto.userId);
     const role = await this.roleService.getRoleByValue(addRoleDto.value);
 
     if (role && user) {
       await user.$add('roles', role.id);
-      const updateduUser = await this.userRepository.findByPk(
+      const updatedUser = await this.userRepository.findByPk(
         addRoleDto.userId,
-        { include: { all: true } },
+        {
+          include: { all: true },
+        },
       );
-      return updateduUser;
+      return updatedUser;
     }
-
     throw new HttpException(
-      'Foydalanuvchi yoki parol topilmadi',
+      'Foydalanuvchi yoki rol topilmadi',
       HttpStatus.NOT_FOUND,
     );
   }
@@ -86,21 +88,23 @@ export class UsersService {
 
     if (role && user) {
       await user.$remove('roles', role.id);
-      const updateduUser = await this.userRepository.findByPk(
+      const updatedUser = await this.userRepository.findByPk(
         addRoleDto.userId,
-        { include: { all: true } },
+        {
+          include: { all: true },
+        },
       );
-      return updateduUser;
+      return updatedUser;
     }
-
     throw new HttpException(
-      'Foydalanuvchi yoki parol topilmadi',
+      'Foydalanuvchi yoki rol topilmadi',
       HttpStatus.NOT_FOUND,
     );
   }
 
   async activateUser(activateUserDto: ActivateUserDto) {
     const user = await this.userRepository.findByPk(activateUserDto.userId);
+
     if (!user) {
       throw new HttpException('Foydalanuvchi topilmadi', HttpStatus.NOT_FOUND);
     }
@@ -111,6 +115,7 @@ export class UsersService {
 
   async deactivateUser(activateUserDto: ActivateUserDto) {
     const user = await this.userRepository.findByPk(activateUserDto.userId);
+
     if (!user) {
       throw new HttpException('Foydalanuvchi topilmadi', HttpStatus.NOT_FOUND);
     }

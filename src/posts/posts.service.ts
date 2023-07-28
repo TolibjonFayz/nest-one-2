@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { CreatePostDto } from './dto/create-post.dto';
-import { Post } from './models/posts.model';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Post } from './models/post.model';
 import { FilesService } from '../files/files.service';
 
 @Injectable()
@@ -18,6 +19,27 @@ export class PostsService {
       ...createPostDto,
       image: fileName,
     });
+
     return post;
+  }
+
+  findAll() {
+    return `This action returns all posts`;
+  }
+
+  async findOne(image: string) {
+    const post = await this.postRepository.findOne({
+      where: { image },
+      include: { all: true },
+    });
+    return post;
+  }
+
+  update(id: number, updatePostDto: UpdatePostDto) {
+    return `This action updates a #${id} post`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} post`;
   }
 }

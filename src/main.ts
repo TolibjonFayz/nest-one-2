@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+// import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
-// import { ValidaitonPipe } from './pipe/validation.pipe';
+import { ValidationPipe } from './pipe/validation.pipe';
 
 const start = async () => {
   try {
@@ -11,17 +11,17 @@ const start = async () => {
     app.useGlobalPipes(new ValidationPipe());
 
     const config = new DocumentBuilder()
-      .setTitle('Nest-One Project')
+      .setTitle('Nest-One-Project')
       .setDescription('REST API')
-      .setVersion('1.0.1')
-      .addTag('NestJs, Postgress, Sequelize')
+      .setVersion('1.0.0')
+      .addTag('NestJS, Postgres, Sequelize')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('/api/docs', app, document);
+    SwaggerModule.setup('api/docs', app, document);
 
     await app.listen(PORT, () => {
-      console.log(`Server is running at ${PORT} port`);
+      console.log(`listening on ${PORT}`);
     });
   } catch (error) {
     console.log(error);

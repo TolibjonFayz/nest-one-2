@@ -7,9 +7,9 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { User } from '../../users/models/users.model';
+import { User } from '../../users/model/user.model';
 
-interface PostCreationAttribute {
+interface PostCreationAttr {
   title: string;
   content: string;
   image: string;
@@ -17,36 +17,38 @@ interface PostCreationAttribute {
 }
 
 @Table({ tableName: 'posts' })
-export class Post extends Model<Post, PostCreationAttribute> {
-  @ApiProperty({ example: 1, description: 'unique id' })
+export class Post extends Model<Post, PostCreationAttr> {
+  @ApiProperty({ example: '1', description: 'Unikall ID' })
   @Column({
     type: DataType.INTEGER,
-    primaryKey: true,
     autoIncrement: true,
+    primaryKey: true,
   })
   id: number;
 
-  @ApiProperty({ example: 'post1', description: 'Post title' })
+  @ApiProperty({ example: 'Post1', description: 'Maqola sarlavhasi' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   title: string;
 
-  @ApiProperty({ example: 'post body', description: 'Post body' })
+  @ApiProperty({
+    example: "Bu yerda maqola matni bo'ladi",
+    description: 'Maqola matni',
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   content: string;
 
-  @ApiProperty({ example: 'post image', description: 'Post image' })
+  @ApiProperty({ example: 'rasm', description: 'Maqola rasmi' })
   @Column({
     type: DataType.STRING,
   })
   image: string;
 
-  @ApiProperty({ example: 'post owner id', description: 'Post owner' })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,

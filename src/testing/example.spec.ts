@@ -4,7 +4,7 @@ test('adds 1+2 to equal 3', () => {
   expect(sum(1, 2)).toBe(3);
 });
 
-test('1+2 != 4', () => {
+test('1+3 !=4', () => {
   expect(sum(1, 2)).not.toEqual(4);
 });
 
@@ -58,6 +58,10 @@ test('there is no I in team', () => {
   expect('team').not.toMatch(/I/);
 });
 
+test('there is I in team', () => {
+  expect('team').toMatch(/m/);
+});
+
 test('but there is a "stop" in Christoph', () => {
   expect('Christoph').toMatch(/stop/);
 });
@@ -75,6 +79,11 @@ test('the shopping list has milk on it', () => {
   expect(new Set(shoppingList)).toContain('milk');
 });
 
+test('the shopping list has milk on it', () => {
+  expect(shoppingList).not.toContain('sugar');
+  expect(new Set(shoppingList)).toContain('milk');
+});
+
 function compileAndroidCode() {
   throw new Error('you are using the wrong JDK!');
 }
@@ -88,6 +97,8 @@ test('compiling android goes as expected', () => {
   expect(() => compileAndroidCode()).toThrow(/JDK/);
 
   // Or you can match an exact error message using a regexp like below
-  // expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK$/); // Test fails
+  //   expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK$/); // Test fails
   expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK!$/); // Test pass
 });
+
+//\\ ==============================================================================//\\

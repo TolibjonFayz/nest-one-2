@@ -1,15 +1,16 @@
+import { LoginDto } from './dto/login-auth.dto';
 import {
   HttpException,
   HttpStatus,
   Injectable,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './dto/login-auth.dto';
 import { UsersService } from '../users/users.service';
-import { createUserDto } from '../users/dto/createUser.dto';
-import { User } from '../users/models/users.model';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
+import { User } from '../users/model/user.model';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -18,9 +19,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async registration(userDto: createUserDto) {
-    const condidate = await this.userService.getUserByEmail(userDto.email);
-    if (condidate) {
+  async registration(userDto: CreateUserDto) {
+    const candidate = await this.userService.getUserByEmail(userDto.email);
+    if (candidate) {
       throw new HttpException(
         'Bunday foydalanuvchi mavjud',
         HttpStatus.BAD_REQUEST,
@@ -31,7 +32,6 @@ export class AuthService {
       ...userDto,
       password: hashedPassword,
     });
-
     return this.generateToken(user);
   }
 
@@ -43,7 +43,8 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto);
     if (!user) {
-      throw new HttpException('Foydalanuvchi topilmad', HttpStatus.NOT_FOUND);
+      throw new HttpException('Foydalanuvchi topilmadi', HttpStatus.NOT_FOUND);
+      // throw new NotFoundException('Foydalanuvchi topilmadi');
     }
     return this.generateToken(user);
   }
@@ -51,16 +52,15 @@ export class AuthService {
   private async validateUser(loginDto: LoginDto) {
     const user = await this.userService.getUserByEmail(loginDto.email);
     if (!user) {
-      throw new UnauthorizedException("Email yoki Parol noto'g'ri");
+      throw new UnauthorizedException("Email yoki parol noto'g'ri");
     }
     const validPassword = await bcrypt.compare(
       loginDto.password,
       user.password,
     );
-
     if (validPassword) {
       return user;
     }
-    throw new UnauthorizedException("Email yoki Parol noto'g'ri");
+    throw new UnauthorizedException("Email yoki parol noto'g'ri");
   }
 }

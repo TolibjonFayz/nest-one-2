@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { createRoleDto } from './dto/createRoles.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('Rollar')
@@ -8,19 +17,17 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
-  @ApiOperation({ summary: 'Role tuzish(yaratish)' })
   @Post()
-  createRole(@Body() createRoleDto: createRoleDto) {
+  create(@Body() createRoleDto: CreateRoleDto) {
     return this.rolesService.createRole(createRoleDto);
   }
 
-  @ApiOperation({ summary: 'Rollarni olish' })
   @Get()
   getAllRoles() {
     return this.rolesService.getAllRoles();
   }
 
-  @ApiOperation({ summary: 'Role qiymatini olish' })
+  @ApiOperation({ summary: 'Rolni value orqali topish' })
   @Get(':value')
   getRoleByValue(@Param('value') value: string) {
     return this.rolesService.getRoleByValue(value);

@@ -1,28 +1,32 @@
-import { Controller, Get, Post, Body, Delete, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login-auth.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { createUserDto } from '../users/dto/createUser.dto';
 
-@ApiTags('Auth')
+@ApiTags('Avtorizatsiya')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiOperation({ summary: 'Userni registrartsiya qilish' })
-  @Post('registration')
-  create(@Body() createUserDto: createUserDto) {
-    console.log(createUserDto);
-
+  @ApiOperation({ summary: 'Registratsiyadan o`tish' })
+  @Post('/registration')
+  registration(@Body() createUserDto: CreateUserDto) {
     return this.authService.registration(createUserDto);
   }
 
-  @ApiOperation({ summary: 'Userni login qilish' })
+  @ApiOperation({ summary: 'Login qilish' })
   @HttpCode(200)
-  @Post('login')
+  @Post('/login')
   login(@Body() loginDto: LoginDto) {
-    console.log(loginDto);
-
     return this.authService.login(loginDto);
   }
 }

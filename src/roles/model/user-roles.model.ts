@@ -5,9 +5,8 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-
-import { Role } from './roles.model';
-import { User } from '../../users/models/users.model';
+import { User } from '../../users/model/user.model';
+import { Role } from './role.model';
 
 @Table({ tableName: 'user_roles', createdAt: false, updatedAt: false })
 export class UserRoles extends Model<UserRoles> {
@@ -19,12 +18,10 @@ export class UserRoles extends Model<UserRoles> {
   id: number;
 
   @ForeignKey(() => User)
-  @Column({
-    type: DataType.INTEGER,
-  })
+  @Column({ type: DataType.INTEGER })
   userId: number;
 
   @ForeignKey(() => Role)
-  @Column({ type: DataType.BOOLEAN })
+  @Column({ type: DataType.INTEGER })
   roleId: number;
 }

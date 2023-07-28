@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   BelongsToMany,
   Column,
@@ -7,9 +6,10 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Role } from '../../roles/models/roles.model';
-import { UserRoles } from '../../roles/models/user-roles.model';
-import { Post } from '../../posts/models/posts.model';
+import { Role } from '../../roles/model/role.model';
+import { UserRoles } from '../../roles/model/user-roles.model';
+import { ApiProperty } from '@nestjs/swagger';
+import { Post } from '../../posts/models/post.model';
 
 interface UserCreationAttrs {
   name: string;
@@ -19,7 +19,10 @@ interface UserCreationAttrs {
 
 @Table({ tableName: 'users' })
 export class User extends Model<User, UserCreationAttrs> {
-  @ApiProperty({ example: 1, description: 'Unikal id' })
+  @ApiProperty({
+    example: 1,
+    description: 'Unikal-ID',
+  })
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -27,29 +30,35 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   id: number;
 
-  @ApiProperty({ example: 'Ahmoqxon', description: 'Ism' })
+  @ApiProperty({
+    example: 'user1',
+    description: 'Foydalanuvchi nomi',
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   name: string;
 
-  @ApiProperty({ example: 'ahmoqme@gmail.com', description: 'Elektron pochta' })
+  @ApiProperty({
+    example: 'user1@mail.uz',
+    description: 'Foydalanuvchi emaili',
+  })
   @Column({
     type: DataType.STRING,
-    unique: true,
     allowNull: false,
+    unique: true,
   })
   email: string;
 
-  @ApiProperty({ example: '@hm0qme', description: 'Parol' })
+  @ApiProperty({ example: 'Uzbek1$t0n', description: 'Foydalanuvchi paroli' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   password: string;
 
-  @ApiProperty({ example: false, description: 'Activemi yoki yo`q shu...' })
+  @ApiProperty({ example: 'true', description: 'Foydalanuvchi aktivligi' })
   @Column({
     type: DataType.BOOLEAN,
     defaultValue: false,
